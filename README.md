@@ -1,3 +1,3 @@
 # JS-Barcode-Detection-App
 
-This is Bacode detection app using QuaggaJS.
+This is a Bacode detection app using QuaggaJS.
