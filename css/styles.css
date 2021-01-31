@@ -1,0 +1,106 @@
+html,
+body {
+  position: relative;
+}
+
+h1 {
+  margin: 0 0 24px 0;
+}
+
+select {
+  width: 150px;
+}
+
+video {
+  margin: 10px 0 0 0;
+  width: 100% !important;
+}
+
+canvas {
+  display: none;
+}
+
+.container {
+  margin: 0 auto;
+  position: absolute;
+  height: 500px;
+  width: 400px;
+  left: 50%;
+  /* top: 50%; */
+  transform: translate(-50%, 0);
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+#camera,
+#camera--view,
+#camera--sensor,
+#camera--output {
+  position: fixed;
+  height: 300px;
+  width: 300px;
+  object-fit: cover;
+}
+
+#camera--view,
+#camera--sensor,
+#camera--output {
+  transform: scaleX(-1);
+  filter: FlipH;
+}
+
+.camera-panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px !important;
+  height: 300px !important;
+  overflow: hidden !important;
+}
+
+.image-capture {
+  display: none;
+}
+
+.video-wrapper {
+  position: absolute;
+  width: 360px;
+  height: 250px;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+}
+
+.small-border-box {
+  position: absolute;
+  width: 19px;
+  height: 16px;
+  border: 3px solid #ffffff;
+}
+
+.top-left-border {
+  left: -3px;
+  top: -3px;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+.top-right-border {
+  right: -3px;
+  top: -3px;
+  border-left: none !important;
+  border-bottom: none !important;
+}
+.bottom-left-border {
+  left: -3px;
+  bottom: -3px;
+  border-right: none !important;
+  border-top: none !important;
+}
+.bottom-right-border {
+  right: -3px;
+  bottom: -3px;
+  border-left: none !important;
+  border-top: none !important;
+}
