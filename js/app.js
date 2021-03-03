@@ -1,14 +1,30 @@
 initQuagga();
-var confirmation;
+startTimer();
+var timer;
+var cameraSensor = document.querySelector("#camera--sensor");
+var cameraOutput = document.querySelector("#cameraOutput");
+var videoElement = document.querySelector("video");
+var barcodePara = document.querySelector("#barcode");
+
+function startTimer() {
+  timer = setInterval(function () {
+    console.log("Print interval!");
+    clearInterval(timer);
+    cameraSensor.width = videoElement.videoWidth;
+    cameraSensor.height = videoElement.videoHeight;
+    cameraSensor.getContext("2d").drawImage(videoElement, 0, 0);
+    cameraOutput.src = cameraSensor.toDataURL("image/png");
+    unDetectedHandler(cameraOutput.src);
+  }, 5000);
+}
 
 function successHandler(result) {
   console.log(result);
-  confirmation = confirm(
-    `Barcode detected. Barcode is "${result.codeResult.code}". Do you want to proceed with it? press "OK" to proceed, else press "Cancel".`
-  );
-  if (confirmation) {
-    window.close();
-  }
+  barcodePara.innerHTML = `your barcode is ${result.codeResult.code}`;
+}
+
+function unDetectedHandler(imageData) {
+  // do some processing...
 }
 
 function initQuagga() {
@@ -46,9 +62,10 @@ function initQuagga() {
   );
 }
 
-Quagga.onDetected((result) => {
+Quagga.onDetected(function (result) {
+  clearInterval(timer);
   successHandler(result);
-  setTimeout(() => {
-    Quagga.offDetected(successHandler);
-  }, 0);
+  // setTimeout(function () {
+  //   Quagga.offDetected(successHandler);
+  // }, 0);
 });
