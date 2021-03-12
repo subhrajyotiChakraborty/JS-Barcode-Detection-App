@@ -1,10 +1,12 @@
+// getDevices();
 initQuagga();
-startTimer();
+// startTimer(); // only for experiment
 var timer;
 var cameraSensor = document.querySelector("#camera--sensor");
 var cameraOutput = document.querySelector("#cameraOutput");
 var videoElement = document.querySelector("video");
 var barcodePara = document.querySelector("#barcode");
+// var deviceSelection = document.querySelector("#device-selection");
 
 function startTimer() {
   timer = setInterval(function () {
@@ -19,7 +21,7 @@ function startTimer() {
 }
 
 function successHandler(result) {
-  console.log(result);
+  // console.log(result);
   barcodePara.innerHTML = `your barcode is ${result.codeResult.code}`;
 }
 
@@ -27,14 +29,26 @@ function unDetectedHandler(imageData) {
   // do some processing...
 }
 
-function initQuagga() {
+function initQuagga(deviceID) {
   Quagga.init(
     {
       inputStream: {
         name: "Live",
         type: "LiveStream",
         target: document.querySelector("#camera"),
+        constraints: {
+          width: 400,
+          height: 300,
+          facingMode: "environment",
+          deviceId: deviceID,
+        },
       },
+      locator: {
+        patchSize: "medium",
+        halfSample: true,
+      },
+      numOfWorkers: 2,
+      frequency: 10,
       decoder: {
         readers: [
           "code_128_reader",
@@ -50,6 +64,7 @@ function initQuagga() {
           "code_93_reader",
         ], // List of active readers,
       },
+      locate: true,
     },
     function (err) {
       if (err) {
@@ -64,8 +79,32 @@ function initQuagga() {
 
 Quagga.onDetected(function (result) {
   clearInterval(timer);
+  var audio = new Audio("../assets/sound/beep.mp3");
+  audio.play();
   successHandler(result);
   // setTimeout(function () {
   //   Quagga.offDetected(successHandler);
   // }, 0);
 });
+
+function getDevices() {
+  navigator.mediaDevices
+    .enumerateDevices()
+    .then((devices) => {
+      var deviceArr = devices.filter((device) => device.kind === "videoinput");
+      console.log(deviceArr);
+      deviceArr.forEach((device) => {
+        const option = document.createElement("option");
+        option.value = device.deviceId;
+        option.text = device.label;
+        deviceSelection.appendChild(option);
+      });
+      deviceSelection.selectedIndex = 1;
+      initQuagga(deviceArr[0].deviceId);
+    })
+    .catch((err) => console.log("No Device found!"));
+}
+
+function onCameraSelectionChange(deviceID) {
+  initQuagga(deviceID);
+}
