@@ -1,12 +1,12 @@
-// getDevices();
-initQuagga();
+getDevices();
+// initQuagga();
 // startTimer(); // only for experiment
 var timer;
 var cameraSensor = document.querySelector("#camera--sensor");
 var cameraOutput = document.querySelector("#cameraOutput");
 var videoElement = document.querySelector("video");
 var barcodePara = document.querySelector("#barcode");
-// var deviceSelection = document.querySelector("#device-selection");
+var deviceSelection = document.querySelector("#device-selection");
 
 var sound = new Howl({
   src: ["../assets/sound/beep.wav"],
@@ -36,7 +36,7 @@ function unDetectedHandler(imageData) {
   // do some processing...
 }
 
-function initQuagga(deviceID) {
+function initQuagga() {
   Quagga.init(
     {
       inputStream: {
@@ -47,7 +47,7 @@ function initQuagga(deviceID) {
           width: 400,
           height: 300,
           facingMode: "environment",
-          deviceId: deviceID,
+          deviceId: deviceSelection.value,
         },
       },
       locator: {
@@ -144,11 +144,16 @@ function getDevices() {
       deviceArr.forEach((device) => {
         const option = document.createElement("option");
         option.value = device.deviceId;
-        option.text = device.label;
+        option.text =
+          device.label || `camera ${deviceSelection.childElementCount + 1}`;
         deviceSelection.appendChild(option);
       });
-      deviceSelection.selectedIndex = 1;
-      initQuagga(deviceArr[0].deviceId);
+      if (deviceSelection.childElementCount > 1) {
+        deviceSelection.selectedIndex = 1;
+      } else {
+        deviceSelection.selectedIndex = 0;
+      }
+      initQuagga();
     })
     .catch((err) => console.log("No Device found!"));
 }
