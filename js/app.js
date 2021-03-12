@@ -8,6 +8,12 @@ var videoElement = document.querySelector("video");
 var barcodePara = document.querySelector("#barcode");
 // var deviceSelection = document.querySelector("#device-selection");
 
+var sound = new Howl({
+  src: ["../assets/sound/beep.wav"],
+  volume: 1,
+  onend: function () {},
+});
+
 function startTimer() {
   timer = setInterval(function () {
     console.log("Print interval!");
@@ -22,6 +28,7 @@ function startTimer() {
 
 function successHandler(result) {
   // console.log(result);
+  sound.play();
   barcodePara.innerHTML = `your barcode is ${result.codeResult.code}`;
 }
 
@@ -95,7 +102,7 @@ Quagga.onProcessed(function (result) {
         })
         .forEach(function (box) {
           Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
-            color: "green",
+            color: "transparent",
             lineWidth: 2,
           });
         });
@@ -121,12 +128,7 @@ Quagga.onDetected(function (result) {
   clearInterval(timer);
   // var audio = new Audio("../assets/sound/beep.mp3");
   // audio.play();
-  var sound = new Howl({
-    src: ["../assets/sound/beep.wav"],
-    volume: 1,
-    onend: function () {},
-  });
-  sound.play();
+
   successHandler(result);
   // setTimeout(function () {
   //   Quagga.offDetected(successHandler);
